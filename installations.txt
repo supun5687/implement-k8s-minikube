@@ -1,0 +1,76 @@
+1. Installing Docker
+------------------------------------------------------------------
+We will be using Docker container as a base for Minikube.
+
+sudo apt-get install docker.io -y 
+sudo usermod -aG docker $USER && newgrp docker
+
+2. Updating system packages and installing Minikube dependencies
+----------------------------------------------------------------------
+sudo apt update & sudo apt upgrade 
+sudo apt install -y curl wget apt-transport-https
+
+3. Installing Minikube
+-------------------------------------------------------------
+Use the following curl command to download the latest Minikube binary:
+
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+Once the binary is downloaded, copy it to the path /usr/local/bin and set the executable permissions on it
+
+sudo install minikube-linux-amd64 /usr/local/bin/minikube
+Verify the minikube version
+
+minikube version
+ #output
+minikube version: v1.32.0
+commit: 8220a6eb95f0a4d75f7f2d7b14cef975f050512d
+Note: At the time of writing this tutorial, the latest version of minikube was v1.32.0
+
+4. Installing kubectl utility
+-----------------------------------------------------------------------
+
+kubectl is a command line used to interact with Kubernetes cluster. It is used for managing deployments, replica sets, services, etc. Use the following command to download the latest version of kubectl.
+
+curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+Once Kubectl is downloaded, set the executable permissions on the Kubectl binary and move it to the path /usr/local/bin.
+
+chmod +x kubectl
+sudo mv kubectl /usr/local/bin/
+Now verify the kubectl version
+
+kubectl version -o yaml
+
+5.Start minikube
+---------------------------------------------------------------
+
+As we stated in the beginning, we would be using docker as base for minikue, so start Minikue with the docker driver and run
+
+minikube start --driver=docker
+
+6. Verifying Installation
+--------------------------------------------------------
+
+Run the below minikube command to check the status.
+
+minikube status
+ #output
+minikube
+type: Control Plane
+host: Running
+kubelet: Running
+apiserver: Running
+kubeconfig: Configured 
+
+Run the following kubectl command to verify the Kubernetes version, node status, and cluster info.
+
+ kubectl cluster-info
+
+Kubernetes control plane is running at https://192.168.49.2:8443
+CoreDNS is running at https://192.168.49.2:8443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+curl -v localhost:8080
+
+Access service issuues
+//kubectl proxy --address='0.0.0.0' --disable-filter=true
+// In case you need port forwardinf to check pod use following
+kubectl port-forward pod/nginx 8080:80
